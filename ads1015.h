@@ -165,10 +165,6 @@ typedef struct ads1015_sample_s {
 /**
  * @brief  Start single measurement
  * @note   This command will start a single measurement
- *         
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
  */
 typedef struct ads1015_handler_s {
     ads1015_mux_t mux;
@@ -194,11 +190,18 @@ typedef struct ads1015_handler_s {
  * @brief  Start single measurement
  * @note   This command will start a single measurement
  *         
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval 0 for success, 1 for failed
  */
 typedef int8_t (*ads1015_init_deinit_t)(void);
+
+/**
+ * @brief  Start single measurement
+ * @note   This command will start a single measurement
+ *         
+ * @param  handler: Pointer to handler
+ * @retval 0 for success, 1 for failed
+ */
+typedef int8_t (*ads1015_send_receive_t)(uint8_t address, int8_t *data, uint8_t len);
 
 /**
  * @brief  Start single measurement
@@ -209,7 +212,7 @@ typedef int8_t (*ads1015_init_deinit_t)(void);
  *                            or
  *                            ADS1015_FAIL: Operation was unsuccessful.
  */
-typedef int8_t (*ads1015_send_receive_t)(uint8_t address, int8_t *data, uint8_t len);
+ads1015_result_t ads1015_init(ads1015_handler_t *handler, uint8_t address);
 
 /**
  * @brief  Start single measurement
