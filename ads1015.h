@@ -31,6 +31,14 @@
 #ifndef ADS1015_H
 #define ADS1015_H
 
+typedef enum ads1015_addr_pointer_e{
+    ADS1015_CONV_REG      = 0,
+    ADS1015_CONF_REG      = 1,
+    ADS1015_LO_THRESH_REG = 2,
+    ADS1015_HI_THRESH_REG = 3,
+
+} ads1015_addr_pointer_t;
+
 typedef enum ads1015_conv_status_e{
     ADS1015_CONV_NOT_BUSY = 0,
     ADS1015_CONV_BUSY     = 1,
@@ -98,9 +106,17 @@ typedef enum ads1015_comp_pol_e{
 } ads1015_comp_pol_t;
 
 typedef enum ads1015_comp_lat_e{
-    ADS1015_COMP_POL_LOW  = 0,
-    ADS1015_COMP_POL_HIGH = 1,
+    ADS1015_COMP_LAT_NONLATCHING = 0,
+    ADS1015_COMP_LAT_LATCHING    = 1,
 
 } ads1015_comp_lat_t;
+
+typedef enum ads1015_comp_que_e{
+    ADS1015_COMP_QUE_AFTER_1 = 0,
+    ADS1015_COMP_QUE_AFTER_2 = 1,
+    ADS1015_COMP_QUE_AFTER_4 = 2,
+    ADS1015_COMP_QUE_DISABLE = 3,
+
+} ads1015_comp_que_t;
 
 #endif
