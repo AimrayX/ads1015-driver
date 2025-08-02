@@ -31,13 +31,40 @@
 #ifndef ADS1015_H
 #define ADS1015_H
 
-typedef enum ads1015_addr_pointer_e{
-    ADS1015_CONV_REG      = 0,
-    ADS1015_CONF_REG      = 1,
-    ADS1015_LO_THRESH_REG = 2,
-    ADS1015_HI_THRESH_REG = 3,
+// Default I2C addresses
+#define ADS1015_I2C_ADDR_GND 0x48
+#define ADS1015_I2C_ADDR_VDD 0x49
+#define ADS1015_I2C_ADDR_SDA 0x4A
+#define ADS1015_I2C_ADDR_SCL 0x4B
 
-} ads1015_addr_pointer_t;
+// I2C registers
+#define ADS1015_REG_CONVERSION  0x00
+#define ADS1015_REG_CONFIG      0x01
+#define ADS1015_REG_LO_THRESH   0x02
+#define ADS1015_REG_HI_THRESH   0x03
+
+
+// Setting starting point in register
+#define ADS1015_CONV_SHIFT      15
+#define ADS1015_MUX_SHIFT       12
+#define ADS1015_PGA_SHIFT        9
+#define ADS1015_MODE_SHIFT       8
+#define ADS1015_DATA_RATE_SHIFT  5
+#define ADS1015_COMP_MODE_SHIFT  4
+#define ADS1015_COMP_POL_SHIFT   3
+#define ADS1015_COMP_LAT_SHIFT   2
+#define ADS1015_COMP_QUE_SHIFT   0
+
+// Setting mask in register
+#define ADS1015_CONV_MASK      (0x1 << ADS1015_CONV_SHIFT)
+#define ADS1015_MUX_MASK       (0x7 << ADS1015_MUX_SHIFT)
+#define ADS1015_PGA_MASK       (0x7 << ADS1015_PGA_SHIFT )
+#define ADS1015_MODE_MASK      (0x1 << ADS1015_MODE_SHIFT )
+#define ADS1015_DATA_RATE_MASK (0x7 << ADS1015_DATA_RATE_SHIFT)
+#define ADS1015_COMP_MODE_MASK (0x1 << ADS1015_COMP_MODE_SHIFT)
+#define ADS1015_COMP_POL_MASK  (0x1 << ADS1015_COMP_POL_SHIFT)
+#define ADS1015_COMP_LAT_MASK  (0x1 << ADS1015_COMP_LAT_SHIFT)
+#define ADS1015_COMP_QUE_MASK  (0x3 << ADS1015_COMP_QUE_SHIFT)
 
 typedef enum ads1015_conv_status_e{
     ADS1015_CONV_NOT_BUSY = 0,
