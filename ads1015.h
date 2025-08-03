@@ -206,7 +206,7 @@ typedef int8_t (*ads1015_init_deinit_t)(void);
  * @retval
  *          - -1: The operation failed. 
  */
-typedef int8_t (*ads1015_send_receive_t)(uint8_t address, int8_t *data, uint8_t len, int fd);
+typedef int8_t (*ads1015_send_receive_t)(uint8_t address, uint8_t *data, uint8_t len, int fd);
 
 /**
  * @brief  Start single measurement

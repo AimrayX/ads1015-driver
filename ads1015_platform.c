@@ -38,15 +38,9 @@
 #include <stdio.h>
 
 
-int8_t platform_write(uint8_t address, int8_t *data, uint8_t len, int fd) {
+int8_t platform_write(uint8_t address, uint8_t *data, uint8_t len, int fd) {
     struct i2c_rdwr_ioctl_data packets;
     struct i2c_msg messages[1];
-
-    int fd = open("/dev/i2c-1", O_RDWR);
-    if (fd < 0) {
-        fprintf(stderr, "[ERROR] %s:%d: Failed to open i2c bus\n", __FILE__, __LINE__);
-        return -1;
-    }
 
     messages[0].addr  = address;
     messages[0].flags = 0; // Write
@@ -57,14 +51,14 @@ int8_t platform_write(uint8_t address, int8_t *data, uint8_t len, int fd) {
     packets.nmsgs = 1;
 
     if (ioctl(fd, I2C_RDWR, &packets) < 0) {
-        fprintf(stderr, "[ERROR] %s:%d: Failed to read register\n", __FILE__, __LINE__);
+        fprintf(stderr, "[ERROR] %s:%d: Failed to write to register\n", __FILE__, __LINE__);
         return -1;
     }
 
     return 0;
 }
 
-int8_t platform_read(uint8_t address, int8_t *data, uint8_t len, int fd) {
+int8_t platform_read(uint8_t address, uint8_t *data, uint8_t len, int fd) {
     struct i2c_rdwr_ioctl_data packets;
     struct i2c_msg messages[1];
 
@@ -85,11 +79,11 @@ int8_t platform_read(uint8_t address, int8_t *data, uint8_t len, int fd) {
 }
 
 int8_t platform_init() {
-    
+    return 0;
 }
 
 int8_t platform_deinit() {
-    
+    return 0;
 }
 
 void ads1015_platform_init(ads1015_handler_t *handler) {
