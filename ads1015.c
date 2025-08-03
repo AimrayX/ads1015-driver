@@ -31,6 +31,7 @@
 
 #include "ads1015.h"
 
+
 static ads1015_result_t ads1015_write_to_register(ads1015_handler_t *handler, uint8_t reg, uint16_t data) {
     uint8_t buffer[3] = {0};
 
@@ -38,7 +39,7 @@ static ads1015_result_t ads1015_write_to_register(ads1015_handler_t *handler, ui
     buffer[1] = (uint8_t)(data >> 8);
     buffer[2] = (uint8_t)data;
 
-    return handler->send(handler->i2c_addr, buffer, 3);
+    return handler->send(handler->i2c_addr, buffer, 3, handler->fd);
 
 }
 
@@ -47,14 +48,14 @@ static ads1015_result_t ads1015_read_register(ads1015_handler_t *handler, uint8_
     int8_t ret_val = 0;
     buffer[0] = reg;
     
-    ret_val = handler->send(handler->i2c_addr, &reg, 1);
+    ret_val = handler->send(handler->i2c_addr, &reg, 1, handler->fd);
 
     if (ret_val < 0)
     {
         return ret_val;
     }
 
-    ret_val = handler->receive(handler->i2c_addr, buffer, 2);
+    ret_val = handler->receive(handler->i2c_addr, buffer, 2, handler->fd);
 
     if (ret_val < 0)
     {
@@ -67,9 +68,14 @@ static ads1015_result_t ads1015_read_register(ads1015_handler_t *handler, uint8_
 
 }
 
-ads1015_result_t ads1015_init(ads1015_handler_t *handler, uint8_t address) {
+ads1015_result_t ads1015_init(ads1015_handler_t *handler, uint8_t address, int fd) {
 
     if (ads1015_set_i2c_address(handler, address) != ADS1015_OK)
+    {
+        return ADS1015_FAIL;
+    }
+
+    if (ads1015_set_fd(handler, fd) != ADS1015_OK)
     {
         return ADS1015_FAIL;
     }
@@ -306,6 +312,17 @@ ads1015_result_t ads1015_set_i2c_address(ads1015_handler_t *handler, uint8_t i2c
     return ADS1015_OK;    
 }
 
+ads1015_result_t ads1015_set_fd(ads1015_handler_t *handler, int fd) {
+    if (fd == 0)
+    {
+        return ADS1015_FAIL;
+    }
+
+    handler->fd = fd;
+
+    return ADS1015_OK;    
+}
+
 
 ads1015_result_t ads1015_set_high_thresh(ads1015_handler_t *handler, uint16_t thresh) {
     if (ads1015_write_to_register(handler, ADS1015_REG_HI_THRESH, thresh) < 0) {
@@ -328,7 +345,7 @@ ads1015_result_t ads1015_set_low_thresh(ads1015_handler_t *handler, uint16_t thr
 ads1015_result_t ads1015_general_call_reset(ads1015_handler_t *handler) {
     uint8_t msg = 0b00000110;
 
-    if (handler->send(handler->i2c_addr, &msg, 1) < 0) {
+    if (handler->send(handler->i2c_addr, &msg, 1, handler->fd) < 0) {
         return ADS1015_FAIL;
     }
 

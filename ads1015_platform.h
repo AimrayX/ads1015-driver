@@ -34,5 +34,11 @@
 #include "ads1015.h"
 
 
+/**
+ * @brief  Initialize platform device to communicate ADS1015.
+ * @param  handler: Pointer to handler
+ * @retval None
+ */
+void ads1015_platform_init(ads1015_handler_t *handler);
 
 #endif
