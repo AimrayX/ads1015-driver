@@ -178,8 +178,8 @@ typedef struct ads1015_handler_s {
 
     uint8_t i2c_addr;
 
-    ads1015_init_deinit_t init;
-    ads1015_init_deinit_t deinit;
+    ads1015_init_deinit_t platform_init;
+    ads1015_init_deinit_t platform_deinit;
     ads1015_send_receive_t send;
     ads1015_send_receive_t receive;
 
@@ -187,10 +187,11 @@ typedef struct ads1015_handler_s {
 } ads1015_handler_t;
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
- *         
- * @retval 0 for success, 1 for failed
+ * @brief  Function type for Initialize/Deinitialize the platform dependent layer.
+ * @retval 
+ *          -  0: The operation was successful.
+ * @retval
+ *          - -1: The operation failed. 
  */
 typedef int8_t (*ads1015_init_deinit_t)(void);
 
@@ -199,7 +200,10 @@ typedef int8_t (*ads1015_init_deinit_t)(void);
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval 0 for success, 1 for failed
+ * @retval 
+ *          -  0: The operation was successful.
+ * @retval
+ *          - -1: The operation failed. 
  */
 typedef int8_t (*ads1015_send_receive_t)(uint8_t address, int8_t *data, uint8_t len);
 
@@ -208,9 +212,11 @@ typedef int8_t (*ads1015_send_receive_t)(uint8_t address, int8_t *data, uint8_t 
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_init(ads1015_handler_t *handler, uint8_t address);
 
@@ -219,9 +225,11 @@ ads1015_result_t ads1015_init(ads1015_handler_t *handler, uint8_t address);
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_start_single_meas(ads1015_handler_t *handler);
 
@@ -230,9 +238,11 @@ ads1015_result_t ads1015_start_single_meas(ads1015_handler_t *handler);
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_check_if_data_available(ads1015_handler_t *handler);
 
@@ -241,9 +251,11 @@ ads1015_result_t ads1015_check_if_data_available(ads1015_handler_t *handler);
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_read_sample(ads1015_handler_t *handler, ads1015_sample_t *sample);
 
@@ -252,20 +264,11 @@ ads1015_result_t ads1015_read_sample(ads1015_handler_t *handler, ads1015_sample_
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
- */
-ads1015_result_t ads1015_get_op_status(ads1015_handler_t *handler);
-
-/**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
- *         
- * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_set_mux(ads1015_handler_t *handler, ads1015_mux_t mux);
 
@@ -274,9 +277,11 @@ ads1015_result_t ads1015_set_mux(ads1015_handler_t *handler, ads1015_mux_t mux);
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_set_pga(ads1015_handler_t *handler, ads1015_pga_t pga);
 
@@ -285,9 +290,11 @@ ads1015_result_t ads1015_set_pga(ads1015_handler_t *handler, ads1015_pga_t pga);
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_set_mode(ads1015_handler_t *handler, ads1015_mode_t mode);
 
@@ -296,9 +303,11 @@ ads1015_result_t ads1015_set_mode(ads1015_handler_t *handler, ads1015_mode_t mod
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_set_data_rate(ads1015_handler_t *handler, ads1015_data_rate_t rate);
 
@@ -307,9 +316,11 @@ ads1015_result_t ads1015_set_data_rate(ads1015_handler_t *handler, ads1015_data_
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_set_comp_mode(ads1015_handler_t *handler, ads1015_comp_mode_t comp_mode);
 
@@ -318,9 +329,11 @@ ads1015_result_t ads1015_set_comp_mode(ads1015_handler_t *handler, ads1015_comp_
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_set_comp_pol(ads1015_handler_t *handler, ads1015_comp_pol_t comp_pol);
 
@@ -329,9 +342,11 @@ ads1015_result_t ads1015_set_comp_pol(ads1015_handler_t *handler, ads1015_comp_p
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_set_comp_lat(ads1015_handler_t *handler, ads1015_comp_lat_t comp_lat);
 
@@ -340,9 +355,11 @@ ads1015_result_t ads1015_set_comp_lat(ads1015_handler_t *handler, ads1015_comp_l
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_set_comp_que(ads1015_handler_t *handler, ads1015_comp_que_t comp_que);
 
@@ -351,9 +368,11 @@ ads1015_result_t ads1015_set_comp_que(ads1015_handler_t *handler, ads1015_comp_q
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_set_i2c_address(ads1015_handler_t *handler, uint8_t i2c_address);
 
@@ -362,9 +381,11 @@ ads1015_result_t ads1015_set_i2c_address(ads1015_handler_t *handler, uint8_t i2c
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_set_high_thresh(ads1015_handler_t *handler, uint16_t thresh);
 
@@ -373,9 +394,11 @@ ads1015_result_t ads1015_set_high_thresh(ads1015_handler_t *handler, uint16_t th
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_set_low_thresh(ads1015_handler_t *handler, uint16_t thresh);
 
@@ -384,9 +407,11 @@ ads1015_result_t ads1015_set_low_thresh(ads1015_handler_t *handler, uint16_t thr
  * @note   This command will start a single measurement
  *         
  * @param  handler: Pointer to handler
- * @retval ads1015_result_t - ADS1015_OK: Operation was successful 
- *                            or
- *                            ADS1015_FAIL: Operation was unsuccessful.
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_general_call_reset(ads1015_handler_t *handler);
 

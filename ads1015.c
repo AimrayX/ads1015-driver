@@ -69,34 +69,79 @@ static ads1015_result_t ads1015_read_register(ads1015_handler_t *handler, uint8_
 
 ads1015_result_t ads1015_init(ads1015_handler_t *handler, uint8_t address) {
 
-}
-
-ads1015_result_t ads1015_start_single_meas(ads1015_handler_t *handler) {
-    return ads1015_write_to_register(handler, ADS1015_REG_CONFIG, ADS1015_CONV_START);
-}
-
-
-ads1015_result_t ads1015_check_if_data_available(ads1015_handler_t *handler) {
-
-}
-
-
-ads1015_result_t ads1015_read_sample(ads1015_handler_t *handler, ads1015_sample_t *sample) {
-    if(ads1015_read_register(handler, ADS1015_REG_CONVERSION, sample->raw) != ADS1015_OK) {
+    if (ads1015_set_i2c_address(handler, address) != ADS1015_OK)
+    {
         return ADS1015_FAIL;
     }
 
-    sample->raw == sample->raw >> 4;
-    sample->voltage == 0; //TODO
+    if (handler->platform_init) {
+        if (handler->platform_init() != 0) {
+            return ADS1015_FAIL;
+        }
+    }
+
+    // Default config
+    if (ads1015_write_to_register(handler, ADS1015_REG_CONFIG, 0x8583) != ADS1015_OK) {
+        return ADS1015_FAIL;
+    }
+
+    handler->mux       = ADS1015_MUX_AIN0_AIN1;
+    handler->pga       = ADS1015_PGA_2_048;
+    handler->mode      = ADS1015_MODE_SINGLE_SHOT;
+    handler->data_rate = ADS1015_DATA_RATE_1600SPS;
+    handler->comp_que  = ADS1015_COMP_QUE_DISABLE;
+
+    return ADS1015_OK;
+}
+
+ads1015_result_t ads1015_start_single_meas(ads1015_handler_t *handler) {
+    uint16_t data = 0;
+
+    if (ads1015_read_register(handler, ADS1015_REG_CONFIG, &data) != ADS1015_OK) {
+        return ADS1015_FAIL;
+    }
+
+    data &= ~ADS1015_CONV_MASK;
+
+    if (ads1015_write_to_register(handler, ADS1015_REG_CONFIG, (0x1 << ADS1015_CONV_SHIFT) | data) != ADS1015_OK) {
+        return ADS1015_FAIL;
+    }
 
     return ADS1015_OK;
 }
 
 
-ads1015_result_t ads1015_get_op_status(ads1015_handler_t *handler) {
+ads1015_result_t ads1015_check_if_data_available(ads1015_handler_t *handler) {
+    uint16_t data = 0;
+    if (ads1015_read_register(handler, ADS1015_REG_CONFIG, &data) != ADS1015_OK) {
+        return ADS1015_FAIL;
+    }
 
+    data &= ADS1015_CONV_MASK;
+
+    if (data == 0) {
+        return ADS1015_FAIL;
+    }
+
+    return ADS1015_OK;
 }
 
+
+ads1015_result_t ads1015_read_sample(ads1015_handler_t *handler, ads1015_sample_t *sample) {
+    for (int i = 0; i < 3; i++) {
+        if (ads1015_check_if_data_available(handler) == ADS1015_OK) {
+            if(ads1015_read_register(handler, ADS1015_REG_CONVERSION, sample->raw) != ADS1015_OK) {
+                return ADS1015_FAIL;
+            }
+
+            sample->raw == sample->raw >> 4;
+            sample->voltage == 0; //TODO convert raw to voltage
+            return ADS1015_OK;
+        }
+    }
+
+    return ADS1015_FAIL;
+}
 
 ads1015_result_t ads1015_set_mux(ads1015_handler_t *handler, ads1015_mux_t mux) {
     uint16_t data = 0;
@@ -251,7 +296,13 @@ ads1015_result_t ads1015_set_comp_que(ads1015_handler_t *handler, ads1015_comp_q
 
 
 ads1015_result_t ads1015_set_i2c_address(ads1015_handler_t *handler, uint8_t i2c_address) {
+    if (i2c_address == 0)
+    {
+        return ADS1015_FAIL;
+    }
+
     handler->i2c_addr = i2c_address;
+
     return ADS1015_OK;    
 }
 
