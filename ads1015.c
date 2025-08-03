@@ -46,7 +46,6 @@ static ads1015_result_t ads1015_write_to_register(ads1015_handler_t *handler, ui
 static ads1015_result_t ads1015_read_register(ads1015_handler_t *handler, uint8_t reg, uint16_t *data) {
     uint8_t buffer[2] = {0};
     int8_t ret_val = 0;
-    buffer[0] = reg;
     
     ret_val = handler->send(handler->i2c_addr, &reg, 1, handler->fd);
 
