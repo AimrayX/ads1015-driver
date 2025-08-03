@@ -177,6 +177,7 @@ typedef struct ads1015_handler_s {
     ads1015_comp_que_t comp_que;
 
     uint8_t i2c_addr;
+    int fd;
 
     ads1015_init_deinit_t platform_init;
     ads1015_init_deinit_t platform_deinit;
@@ -205,7 +206,7 @@ typedef int8_t (*ads1015_init_deinit_t)(void);
  * @retval
  *          - -1: The operation failed. 
  */
-typedef int8_t (*ads1015_send_receive_t)(uint8_t address, int8_t *data, uint8_t len);
+typedef int8_t (*ads1015_send_receive_t)(uint8_t address, uint8_t *data, uint8_t len, int fd);
 
 /**
  * @brief  Start single measurement
@@ -218,7 +219,7 @@ typedef int8_t (*ads1015_send_receive_t)(uint8_t address, int8_t *data, uint8_t 
  * @retval
  *                           - ADS1015_FAIL: Operation was unsuccessful
  */
-ads1015_result_t ads1015_init(ads1015_handler_t *handler, uint8_t address);
+ads1015_result_t ads1015_init(ads1015_handler_t *handler, uint8_t address, int fd);
 
 /**
  * @brief  Start single measurement
