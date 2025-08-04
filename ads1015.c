@@ -140,7 +140,27 @@ ads1015_result_t ads1015_read_sample(ads1015_handler_t *handler, ads1015_sample_
             }
 
             sample->raw = sample->raw >> 4;
-            sample->voltage = (sample->raw / 2048.0f) * 2.048f; //TODO convert raw to voltage
+
+            // If sample->raw is unsigned, do sign extension manually
+            if (sample->raw & 0x800) {
+                sample->raw |= 0xF000;
+            }
+
+            
+            if (handler->pga == ADS1015_PGA_6_144) {
+                sample->voltage = sample->raw * 0.003f;
+            } else if(handler->pga == ADS1015_PGA_4_096) {
+                sample->voltage = sample->raw * 0.002f;
+            } else if(handler->pga == ADS1015_PGA_2_048) {
+                sample->voltage = sample->raw * 0.001f;
+            } else if(handler->pga == ADS1015_PGA_1_024) {
+                sample->voltage = sample->raw * 0.0005f;
+            } else if(handler->pga == ADS1015_PGA_0_512) {
+                sample->voltage = sample->raw * 0.00025f;
+            } else if(handler->pga == ADS1015_PGA_0_256) {
+                sample->voltage = sample->raw * 0.000125f;
+            }
+
             return ADS1015_OK;
         }
     }

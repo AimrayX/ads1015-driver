@@ -25,11 +25,6 @@ int main() {
         return 1;
     }
 
-    if (ads1015_set_pga(&ads1015, ADS1015_PGA_4_096) != ADS1015_OK) {
-        fprintf(stderr, "[ERROR] %s:%d: Failed to change mux setting\n", __FILE__, __LINE__);
-        return 1;
-    }
-
     for (size_t i = 0; i < 5; i++)
     {
         if (ads1015_start_single_meas(&ads1015) != ADS1015_OK) {
@@ -42,8 +37,8 @@ int main() {
             fprintf(stderr, "[ERROR] %s:%d: Failed to take sample\n", __FILE__, __LINE__);
             return 1;
         }
-        float result = 30.9375f * sample.voltage - 11.875f;
-        fprintf(stdout, "[INFO] %s:%d: Result of sample is %d, %fV, %fm/s\n", __FILE__, __LINE__, sample.raw, sample.voltage, result);
+
+        fprintf(stdout, "[INFO] %s:%d: Result of sample is %d, %fV\n", __FILE__, __LINE__, sample.raw, sample.voltage);
         sleep(1);
     }
     
