@@ -135,12 +135,12 @@ ads1015_result_t ads1015_check_if_data_available(ads1015_handler_t *handler) {
 ads1015_result_t ads1015_read_sample(ads1015_handler_t *handler, ads1015_sample_t *sample) {
     for (int i = 0; i < 3; i++) {
         if (ads1015_check_if_data_available(handler) == ADS1015_OK) {
-            if(ads1015_read_register(handler, ADS1015_REG_CONVERSION, sample->raw) != ADS1015_OK) {
+            if(ads1015_read_register(handler, ADS1015_REG_CONVERSION, (uint16_t *)&sample->raw) != ADS1015_OK) {
                 return ADS1015_FAIL;
             }
 
-            sample->raw == sample->raw >> 4;
-            sample->voltage == 0; //TODO convert raw to voltage
+            sample->raw = sample->raw >> 4;
+            sample->voltage = (sample->raw / 2048.0f) * 2.048f; //TODO convert raw to voltage
             return ADS1015_OK;
         }
     }

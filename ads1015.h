@@ -104,8 +104,6 @@ typedef enum ads1015_pga_e {
     ADS1015_PGA_1_024 = 3,
     ADS1015_PGA_0_512 = 4,
     ADS1015_PGA_0_256 = 5,
-    ADS1015_PGA_0_256 = 6,
-    ADS1015_PGA_0_256 = 7,
 
 } ads1015_pga_t;
 
@@ -123,7 +121,6 @@ typedef enum ads1015_data_rate_e {
     ADS1015_DATA_RATE_1600SPS = 4,
     ADS1015_DATA_RATE_2400SPS = 5,
     ADS1015_DATA_RATE_3300SPS = 6,
-    ADS1015_DATA_RATE_3300SPS = 7,
 
 } ads1015_data_rate_t;
 
@@ -163,6 +160,27 @@ typedef struct ads1015_sample_s {
 } ads1015_sample_t;
 
 /**
+ * @brief  Function type for Initialize/Deinitialize the platform dependent layer.
+ * @retval 
+ *          -  0: The operation was successful.
+ * @retval
+ *          - -1: The operation failed. 
+ */
+typedef int8_t (*ads1015_init_deinit_t)(void);
+
+/**
+ * @brief  Start single measurement
+ * @note   This command will start a single measurement
+ *         
+ * @param  handler: Pointer to handler
+ * @retval 
+ *          -  0: The operation was successful.
+ * @retval
+ *          - -1: The operation failed. 
+ */
+typedef int8_t (*ads1015_send_receive_t)(uint8_t address, uint8_t *data, uint8_t len, int fd);
+
+/**
  * @brief  Start single measurement
  * @note   This command will start a single measurement
  */
@@ -186,27 +204,6 @@ typedef struct ads1015_handler_s {
 
     
 } ads1015_handler_t;
-
-/**
- * @brief  Function type for Initialize/Deinitialize the platform dependent layer.
- * @retval 
- *          -  0: The operation was successful.
- * @retval
- *          - -1: The operation failed. 
- */
-typedef int8_t (*ads1015_init_deinit_t)(void);
-
-/**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
- *         
- * @param  handler: Pointer to handler
- * @retval 
- *          -  0: The operation was successful.
- * @retval
- *          - -1: The operation failed. 
- */
-typedef int8_t (*ads1015_send_receive_t)(uint8_t address, uint8_t *data, uint8_t len, int fd);
 
 /**
  * @brief  Start single measurement
@@ -376,6 +373,19 @@ ads1015_result_t ads1015_set_comp_que(ads1015_handler_t *handler, ads1015_comp_q
  *                           - ADS1015_FAIL: Operation was unsuccessful
  */
 ads1015_result_t ads1015_set_i2c_address(ads1015_handler_t *handler, uint8_t i2c_address);
+
+/**
+ * @brief  Start single measurement
+ * @note   This command will start a single measurement
+ *         
+ * @param  handler: Pointer to handler
+ * @retval ads1015_result_t  
+ * @retval
+ *                           - ADS1015_OK: Operation was successful 
+ * @retval
+ *                           - ADS1015_FAIL: Operation was unsuccessful
+ */
+ads1015_result_t ads1015_set_fd(ads1015_handler_t *handler, int fd);
 
 /**
  * @brief  Start single measurement
