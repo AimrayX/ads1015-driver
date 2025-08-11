@@ -35,7 +35,7 @@
 
 
 /**
- * @brief  Initialize platform device to communicate ADS1015.
+ * @brief  Initialize platform device to communicate with ADS1015
  * @param  handler: Pointer to handler
  * @retval None
  */

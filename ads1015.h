@@ -152,6 +152,7 @@ typedef enum ads1015_comp_que_e {
 
 /**
  * @brief  Sample
+ * @note   Holds a single sample which contains the raw 16bit output and the corresponding voltage
  */
 typedef struct ads1015_sample_s {
     int16_t raw;
@@ -169,10 +170,13 @@ typedef struct ads1015_sample_s {
 typedef int8_t (*ads1015_init_deinit_t)(void);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  platform dependent send and receive
+ * @note   In case of a linux system over i2c this would be ioctl and i2c-dev
  *         
- * @param  handler: Pointer to handler
+ * @param  address: Device address on bus
+ * @param  data: Data to be sent
+ * @param  len: Length of data
+ * @param  fd: File descriptor
  * @retval 
  *          -  0: The operation was successful.
  * @retval
@@ -181,8 +185,8 @@ typedef int8_t (*ads1015_init_deinit_t)(void);
 typedef int8_t (*ads1015_send_receive_t)(uint8_t address, uint8_t *data, uint8_t len, int fd);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Handler with device information and settings
+ * @note   This struct holds all the settings for the sensor and the platform specific functions
  */
 typedef struct ads1015_handler_s {
     ads1015_mux_t mux;
@@ -206,10 +210,16 @@ typedef struct ads1015_handler_s {
 } ads1015_handler_t;
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief   Initializes the ads1015
+ * @note    This function will set the file descriptor, the i2c address,
+ *          trigger the platform specific initialization function and
+ *          set all the default settings: ADS1015_MUX_AIN0_AIN1, ADS1015_PGA_2_048,
+ *          ADS1015_MODE_SINGLE_SHOT, ADS1015_DATA_RATE_1600SPS, ADS1015_COMP_QUE_DISABLE
+ * 
  *         
  * @param  handler: Pointer to handler
+ * @param  address: I2C address
+ * @param  fd:      file descriptor
  * @retval ads1015_result_t  
  * @retval
  *                           - ADS1015_OK: Operation was successful 
@@ -232,8 +242,7 @@ ads1015_result_t ads1015_init(ads1015_handler_t *handler, uint8_t address, int f
 ads1015_result_t ads1015_start_single_meas(ads1015_handler_t *handler);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Check if data is available
  *         
  * @param  handler: Pointer to handler
  * @retval ads1015_result_t  
@@ -245,10 +254,10 @@ ads1015_result_t ads1015_start_single_meas(ads1015_handler_t *handler);
 ads1015_result_t ads1015_check_if_data_available(ads1015_handler_t *handler);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Read a sample
  *         
  * @param  handler: Pointer to handler
+ * @param  sample: Pointer to a sample struct
  * @retval ads1015_result_t  
  * @retval
  *                           - ADS1015_OK: Operation was successful 
@@ -258,10 +267,10 @@ ads1015_result_t ads1015_check_if_data_available(ads1015_handler_t *handler);
 ads1015_result_t ads1015_read_sample(ads1015_handler_t *handler, ads1015_sample_t *sample);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Sets mux
  *         
  * @param  handler: Pointer to handler
+ * @param  mux:     MUX value to set
  * @retval ads1015_result_t  
  * @retval
  *                           - ADS1015_OK: Operation was successful 
@@ -271,10 +280,10 @@ ads1015_result_t ads1015_read_sample(ads1015_handler_t *handler, ads1015_sample_
 ads1015_result_t ads1015_set_mux(ads1015_handler_t *handler, ads1015_mux_t mux);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Sets pga
  *         
  * @param  handler: Pointer to handler
+ * @param  pga:     PGA value to set
  * @retval ads1015_result_t  
  * @retval
  *                           - ADS1015_OK: Operation was successful 
@@ -284,10 +293,10 @@ ads1015_result_t ads1015_set_mux(ads1015_handler_t *handler, ads1015_mux_t mux);
 ads1015_result_t ads1015_set_pga(ads1015_handler_t *handler, ads1015_pga_t pga);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Sets mode
  *         
  * @param  handler: Pointer to handler
+ * @param  mode:    Mode to set
  * @retval ads1015_result_t  
  * @retval
  *                           - ADS1015_OK: Operation was successful 
@@ -297,10 +306,10 @@ ads1015_result_t ads1015_set_pga(ads1015_handler_t *handler, ads1015_pga_t pga);
 ads1015_result_t ads1015_set_mode(ads1015_handler_t *handler, ads1015_mode_t mode);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Sets data rate
  *         
  * @param  handler: Pointer to handler
+ * @param  rate:    Data rate to set
  * @retval ads1015_result_t  
  * @retval
  *                           - ADS1015_OK: Operation was successful 
@@ -310,10 +319,10 @@ ads1015_result_t ads1015_set_mode(ads1015_handler_t *handler, ads1015_mode_t mod
 ads1015_result_t ads1015_set_data_rate(ads1015_handler_t *handler, ads1015_data_rate_t rate);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Sets comp mode
  *         
  * @param  handler: Pointer to handler
+ * @param  comp_mode: Comp mode to set
  * @retval ads1015_result_t  
  * @retval
  *                           - ADS1015_OK: Operation was successful 
@@ -323,10 +332,10 @@ ads1015_result_t ads1015_set_data_rate(ads1015_handler_t *handler, ads1015_data_
 ads1015_result_t ads1015_set_comp_mode(ads1015_handler_t *handler, ads1015_comp_mode_t comp_mode);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Sets comp pol
  *         
  * @param  handler: Pointer to handler
+ * @param  comp_pol: Comp pol to set
  * @retval ads1015_result_t  
  * @retval
  *                           - ADS1015_OK: Operation was successful 
@@ -336,10 +345,10 @@ ads1015_result_t ads1015_set_comp_mode(ads1015_handler_t *handler, ads1015_comp_
 ads1015_result_t ads1015_set_comp_pol(ads1015_handler_t *handler, ads1015_comp_pol_t comp_pol);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Sets comp lat
  *         
  * @param  handler: Pointer to handler
+ * @param  comp_lat: Comp lat to set
  * @retval ads1015_result_t  
  * @retval
  *                           - ADS1015_OK: Operation was successful 
@@ -349,10 +358,10 @@ ads1015_result_t ads1015_set_comp_pol(ads1015_handler_t *handler, ads1015_comp_p
 ads1015_result_t ads1015_set_comp_lat(ads1015_handler_t *handler, ads1015_comp_lat_t comp_lat);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Sets comp que
  *         
  * @param  handler: Pointer to handler
+ * @param  comp_que: Comp que to set
  * @retval ads1015_result_t  
  * @retval
  *                           - ADS1015_OK: Operation was successful 
@@ -362,10 +371,10 @@ ads1015_result_t ads1015_set_comp_lat(ads1015_handler_t *handler, ads1015_comp_l
 ads1015_result_t ads1015_set_comp_que(ads1015_handler_t *handler, ads1015_comp_que_t comp_que);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Sets i2c address
  *         
  * @param  handler: Pointer to handler
+ * @param  i2c_address: I2C address of ads1015
  * @retval ads1015_result_t  
  * @retval
  *                           - ADS1015_OK: Operation was successful 
@@ -375,10 +384,10 @@ ads1015_result_t ads1015_set_comp_que(ads1015_handler_t *handler, ads1015_comp_q
 ads1015_result_t ads1015_set_i2c_address(ads1015_handler_t *handler, uint8_t i2c_address);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Sets file descriptor
  *         
  * @param  handler: Pointer to handler
+ * @param  fd:      File descriptor
  * @retval ads1015_result_t  
  * @retval
  *                           - ADS1015_OK: Operation was successful 
@@ -388,10 +397,10 @@ ads1015_result_t ads1015_set_i2c_address(ads1015_handler_t *handler, uint8_t i2c
 ads1015_result_t ads1015_set_fd(ads1015_handler_t *handler, int fd);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Sets high threshold
  *         
  * @param  handler: Pointer to handler
+ * @param  thresh: Threshold to set
  * @retval ads1015_result_t  
  * @retval
  *                           - ADS1015_OK: Operation was successful 
@@ -401,10 +410,10 @@ ads1015_result_t ads1015_set_fd(ads1015_handler_t *handler, int fd);
 ads1015_result_t ads1015_set_high_thresh(ads1015_handler_t *handler, uint16_t thresh);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Sets low threshold
  *         
  * @param  handler: Pointer to handler
+ * @param  thresh: Threshold to set
  * @retval ads1015_result_t  
  * @retval
  *                           - ADS1015_OK: Operation was successful 
@@ -414,8 +423,7 @@ ads1015_result_t ads1015_set_high_thresh(ads1015_handler_t *handler, uint16_t th
 ads1015_result_t ads1015_set_low_thresh(ads1015_handler_t *handler, uint16_t thresh);
 
 /**
- * @brief  Start single measurement
- * @note   This command will start a single measurement
+ * @brief  Reset all i2c devices on bus
  *         
  * @param  handler: Pointer to handler
  * @retval ads1015_result_t  
